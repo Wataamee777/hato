@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>はと餌やり</title>
+    <style>
+        body {
+            text-align: center;
+            font-family: Arial, sans-serif;
+        }
+        img {
+            width: 200px;
+            height: 200px;
+        }
+    </style>
+</head>
+<body>
+    <h1>スペースキーを押して餌を与えよう！</h1>
+    <img id="pet" src="pet1.png" alt="ペット">
+    <p>餌を与えた回数: <span id="count">0</span></p>
+    <p>ランク: <span id="rank">初心者</span></p>
+    
+    <script>
+        function getCookie(name) {
+            let matches = document.cookie.match(new RegExp("(?:^|; )" + name.replace(/([.$?*|{}()\[\]\\/\\+^])/g, '\\$1') + "=([^;]*)"));
+            return matches ? decodeURIComponent(matches[1]) : "";
+        }
+
+        function setCookie(name, value, days) {
+            let date = new Date();
+            date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+            document.cookie = name + "=" + encodeURIComponent(value) + ";expires=" + date.toUTCString() + ";path=/";
+        }
+
+        let count = parseInt(getCookie("feedCount")) || 0;
+        document.getElementById("count").textContent = count;
+        
+        function updateRank() {
+            let rank = "初心者";
+            if (count >= 50) rank = "達人";
+            else if (count >= 20) rank = "中級者";
+            else if (count >= 10) rank = "初級者";
+            document.getElementById("rank").textContent = rank;
+        }
+
+        updateRank();
+        
+        document.addEventListener("keydown", function(event) {
+            if (event.code === "Space") {
+                count++;
+                document.getElementById("count").textContent = count;
+                setCookie("feedCount", count, 30);
+                updateRank();
+                
+                document.getElementById("pet").src = "pet2.png"; // 餌を食べる画像
+                setTimeout(() => {
+                    document.getElementById("pet").src = "pet1.png"; // 元の画像に戻す
+                }, 500);
+            }
+        });
+    </script>
+</body>
+</html>
