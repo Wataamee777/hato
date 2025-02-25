@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>はと餌やり</title>
+    <title>餌やりゲーム</title>
     <style>
         body {
             text-align: center;
@@ -12,12 +12,13 @@
         img {
             width: 200px;
             height: 200px;
+            cursor: pointer;
         }
     </style>
 </head>
 <body>
-    <h1>スペースキーを押して餌を与えよう！</h1>
-    <img id="pet" src="pet1.png" alt="ペット">
+    <h1>タップして餌を与えよう！</h1>
+    <img id="pet" src="" alt="ペット">
     <p>餌を与えた回数: <span id="count">0</span></p>
     <p>ランク: <span id="rank">初心者</span></p>
     
@@ -34,31 +35,42 @@
         }
 
         let count = parseInt(getCookie("feedCount")) || 0;
+        let petImage = getCookie("petImage") || "pet0.png";
+        let rank = getCookie("rank") || "初心者";
+
         document.getElementById("count").textContent = count;
+        document.getElementById("pet").src = petImage;
+        document.getElementById("rank").textContent = rank;
         
         function updateRank() {
-            let rank = "初心者";
-            if (count >= 50) rank = "達人";
-            else if (count >= 20) rank = "中級者";
-            else if (count >= 10) rank = "初級者";
-            document.getElementById("rank").textContent = rank;
+            let newRank = "初心者";
+            let newPetImage = "pet0.png";
+            
+            if (count >= 600) { newRank = "はと"; newPetImage = "pet8.png"; }
+            else if (count >= 500) { newRank = "さくら"; newPetImage = "pet7.png"; }
+            else if (count >= 400) { newRank = "はとの死骸"; newPetImage = "pet6.png"; }
+            else if (count >= 300) { newRank = "神に選ばれた者"; newPetImage = "pet5.png"; }
+            else if (count >= 250) { newRank = "飼育員"; newPetImage = "pet4.png"; }
+            else if (count >= 150) { newRank = "猛者"; newPetImage = "pet3.png"; }
+            else if (count >= 100) { newRank = "上級者"; newPetImage = "pet2.png"; }
+            else if (count >= 50) { newRank = "中級者"; newPetImage = "pet1.png"; }
+            
+            document.getElementById("rank").textContent = newRank;
+            document.getElementById("pet").src = newPetImage;
+            setCookie("rank", newRank, 30);
+            setCookie("petImage", newPetImage, 30);
         }
 
         updateRank();
         
-        document.addEventListener("keydown", function(event) {
-            if (event.code === "Space") {
-                count++;
-                document.getElementById("count").textContent = count;
-                setCookie("feedCount", count, 30);
-                updateRank();
-                
-                document.getElementById("pet").src = "pet2.png"; // 餌を食べる画像
-                setTimeout(() => {
-                    document.getElementById("pet").src = "pet1.png"; // 元の画像に戻す
-                }, 500);
-            }
-        });
+        function feedPet() {
+            count++;
+            document.getElementById("count").textContent = count;
+            setCookie("feedCount", count, 30);
+            updateRank();
+        }
+
+        document.getElementById("pet").addEventListener("click", feedPet);
     </script>
 </body>
 </html>
