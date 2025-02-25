@@ -42,18 +42,37 @@
         document.getElementById("pet").src = petImage;
         document.getElementById("rank").textContent = rank;
         
-        function updateRank() {
-            let newRank = "初心者";
-            let newPetImage = "pet0.png";
+        function updateRank() 
             
-            if (count >= 600) { newRank = "はと"; newPetImage = "pet8.png"; }
-            else if (count >= 500) { newRank = "さくら"; newPetImage = "pet7.png"; }
-            else if (count >= 400) { newRank = "はとの死骸"; newPetImage = "pet6.png"; }
-            else if (count >= 300) { newRank = "神に選ばれた者"; newPetImage = "pet5.png"; }
-            else if (count >= 250) { newRank = "飼育員"; newPetImage = "pet4.png"; }
-            else if (count >= 150) { newRank = "猛者"; newPetImage = "pet3.png"; }
-            else if (count >= 100) { newRank = "上級者"; newPetImage = "pet2.png"; }
-            else if (count >= 50) { newRank = "中級者"; newPetImage = "pet1.png"; }
+            const ranks = [
+    { name: "初心者", max: 100, image: "pet0.png", step: 1 },
+    { name: "上級者", max: 300, image: "pet1.png", step: 2 },
+    { name: "飼育員", max: 400, image: "pet2.png", step: 3 },
+    { name: "神に選ばれた者", max: 500, image: "pet3.png", step: 4 },
+    { name: "さくら", max: 600, image: "pet4.png", step: 5 },
+    { name: "はと", max: Infinity, image: "pet5.png", step: 5 }
+];
+
+function updateRank() {
+    const count = getFeedCount();
+    let newRank = ranks[0];
+    
+    for (let i = 0; i < ranks.length; i++) {
+        if (count <= ranks[i].max) {
+            newRank = ranks[i];
+            break;
+        }
+    }
+    
+    document.getElementById("rank").textContent = newRank.name;
+    document.getElementById("pet").src = newRank.image;
+    setCookie("rank", newRank.name);
+    setCookie("petImage", newRank.image);
+    
+    if (count >= 500000) {
+        alert("500000回で特別なロールが受け取れるよ!!");
+    }
+}
             
             document.getElementById("rank").textContent = newRank;
             document.getElementById("pet").src = newPetImage;
